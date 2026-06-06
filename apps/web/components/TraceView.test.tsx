@@ -140,6 +140,15 @@ describe("TraceView", () => {
     expect(screen.getAllByText("Copy").length).toBeGreaterThanOrEqual(5);
   });
 
+  it("opens the inspector from the node card tap target", () => {
+    render(<TraceView tree={INSPECTOR_TREE} />);
+
+    fireEvent.click(screen.getAllByTestId("trace-node-card")[0]!);
+
+    expect(screen.getByText("Message inspector")).toBeTruthy();
+    expect(screen.getByText("Root ID")).toBeTruthy();
+  });
+
   it("shows the linked parent when inspecting a reply", () => {
     const { container } = render(<TraceView tree={INSPECTOR_TREE} />);
     const flowNodes = container.querySelectorAll(".react-flow__node");

@@ -68,17 +68,21 @@ export default function Home() {
   }, [run]);
 
   return (
-    <main style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
-      <header style={{
-        padding: "12px 20px",
-        borderBottom: "1px solid var(--border-primary)",
-        display: "flex",
-        gap: 12,
-        alignItems: "center",
-        background: "var(--bg-primary)",
-        boxShadow: "var(--header-shadow)",
-      }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+    <main style={{ display: "flex", flexDirection: "column", minHeight: "100vh", height: "100vh", overflow: "hidden" }}>
+      <header
+        data-testid="app-header"
+        style={{
+          padding: "12px clamp(12px, 3vw, 20px)",
+          borderBottom: "1px solid var(--border-primary)",
+          display: "flex",
+          gap: 12,
+          alignItems: "center",
+          flexWrap: "wrap",
+          background: "var(--bg-primary)",
+          boxShadow: "var(--header-shadow)",
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "center", gap: 10, minWidth: 0, flex: "1 1 260px" }}>
           <a
             href="/"
             aria-label="VaraTrace home"
@@ -86,6 +90,7 @@ export default function Home() {
               display: "flex",
               alignItems: "center",
               gap: 10,
+              flexShrink: 0,
               color: "inherit",
               textDecoration: "none",
             }}
@@ -97,11 +102,27 @@ export default function Home() {
             </svg>
             <strong style={{ fontSize: 17, letterSpacing: 0, color: "var(--text-primary)" }}>VaraTrace</strong>
           </a>
-          <span style={{ color: "var(--text-muted)", fontSize: 13 }}>— async message debugger for Vara</span>
+          <span style={{
+            color: "var(--text-muted)",
+            fontSize: 13,
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+            minWidth: 0,
+          }}>— async message debugger for Vara</span>
           {status && <DataSourceBadge status={status} />}
         </div>
 
-        <div style={{ marginLeft: "auto", display: "flex", gap: 8, alignItems: "center" }}>
+        <div style={{
+          marginLeft: "auto",
+          display: "flex",
+          gap: 8,
+          alignItems: "center",
+          flexWrap: "wrap",
+          justifyContent: "flex-end",
+          minWidth: 0,
+          flex: "1 1 460px",
+        }}>
           {recentTraces.length > 0 && (
             <RecentTracePicker
               traces={recentTraces}
@@ -144,14 +165,15 @@ export default function Home() {
 
           <form
             onSubmit={(e) => { e.preventDefault(); run(id); }}
-            style={{ display: "flex", gap: 8 }}
+            style={{ display: "flex", gap: 8, minWidth: 0, flex: "1 1 320px" }}
           >
             <input
               value={id}
               onChange={(e) => setId(e.target.value)}
               placeholder="message id / tx hash / sample name"
               style={{
-                width: 340,
+                minWidth: 0,
+                width: "100%",
                 padding: "9px 12px",
                 border: "1px solid var(--border-input)",
                 borderRadius: 8,
@@ -170,6 +192,7 @@ export default function Home() {
               disabled={loading}
               style={{
                 padding: "9px 18px",
+                minWidth: 70,
                 borderRadius: 8,
                 border: "none",
                 background: loading ? "var(--text-muted)" : "var(--text-primary)",
@@ -255,6 +278,35 @@ export default function Home() {
         @keyframes spin {
           to { transform: rotate(360deg); }
         }
+        @media (max-width: 860px) {
+          [data-testid="app-header"] {
+            align-items: stretch !important;
+          }
+          [data-testid="app-header"] > div {
+            flex-basis: 100% !important;
+            margin-left: 0 !important;
+            justify-content: flex-start !important;
+          }
+          [data-testid="app-header"] form {
+            flex-basis: 100% !important;
+          }
+        }
+        @media (max-width: 520px) {
+          [data-testid="app-header"] {
+            gap: 10px !important;
+          }
+          [data-testid="app-header"] > div:first-child > span {
+            display: none !important;
+          }
+          [data-testid="app-header"] form {
+            display: grid !important;
+            grid-template-columns: minmax(0, 1fr) auto;
+            width: 100%;
+          }
+          [data-testid="app-header"] select {
+            flex-basis: calc(100% - 42px) !important;
+          }
+        }
       `}</style>
     </main>
   );
@@ -323,6 +375,8 @@ function RecentTracePicker({
       }}
       style={{
         width: 270,
+        maxWidth: "100%",
+        flex: "0 1 270px",
         padding: "9px 10px",
         border: "1px solid var(--border-input)",
         borderRadius: 8,

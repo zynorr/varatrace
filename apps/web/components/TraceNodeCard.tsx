@@ -2,6 +2,12 @@
 import { Handle, Position, type NodeProps } from "reactflow";
 import type { MessageNode } from "../lib/types";
 
+export type TraceNodeCardData = {
+  node: MessageNode;
+  onFailPath: boolean;
+  onSelect?: (node: MessageNode) => void;
+};
+
 const short = (hex: string) =>
   hex.startsWith("0x") && hex.length > 12 ? `${hex.slice(0, 6)}…${hex.slice(-4)}` : hex;
 
@@ -20,12 +26,13 @@ const invisibleHandleStyle = {
   pointerEvents: "none" as const,
 };
 
-export function TraceNodeCard({ data }: NodeProps<{ node: MessageNode; onFailPath: boolean }>) {
+export function TraceNodeCard({ data }: NodeProps<TraceNodeCardData>) {
   const { node, onFailPath } = data;
   const cfg = STATUS_CONFIG[node.status];
   const destinationLabel = node.programName ?? short(node.destination);
   return (
     <div
+      data-testid="trace-node-card"
       style={{
         width: 240,
         background: "var(--bg-primary)",
@@ -37,6 +44,7 @@ export function TraceNodeCard({ data }: NodeProps<{ node: MessageNode; onFailPat
         transition: "box-shadow 0.15s, border-color 0.15s",
         cursor: "pointer",
       }}
+      onClick={() => data.onSelect?.(node)}
       onMouseEnter={(e) => {
         if (!onFailPath) e.currentTarget.style.boxShadow = "var(--node-shadow-hover)";
       }}

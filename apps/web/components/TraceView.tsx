@@ -38,11 +38,12 @@ const PANEL_MAX = 600;
 const PANEL_DEFAULT = 340;
 
 export function TraceView({ tree }: { tree: TraceTree }) {
-  const { nodes, edges } = useMemo(() => traceToFlow(tree), [tree]);
   const [selected, setSelected] = useState<MessageNode | null>(null);
   const [panelWidth, setPanelWidth] = useState(PANEL_DEFAULT);
   const isMobile = useMediaQuery("(max-width: 768px)");
   const dragRef = useRef<{ startX: number; startW: number } | null>(null);
+  const selectNode = useCallback((node: MessageNode) => setSelected(node), []);
+  const { nodes, edges } = useMemo(() => traceToFlow(tree, { onSelect: selectNode }), [tree, selectNode]);
   const selectedParentEdge = useMemo(
     () => selected ? tree.edges.find((edge) => edge.to === selected.id) : undefined,
     [selected, tree.edges],
@@ -53,8 +54,8 @@ export function TraceView({ tree }: { tree: TraceTree }) {
   );
 
   const handleNodeClick = useCallback((_: any, n: Node) => {
-    setSelected((n.data as { node: MessageNode }).node);
-  }, []);
+    selectNode((n.data as { node: MessageNode }).node);
+  }, [selectNode]);
 
   const closePanel = useCallback(() => setSelected(null), []);
 
@@ -101,7 +102,6 @@ export function TraceView({ tree }: { tree: TraceTree }) {
     <div style={{ display: "flex", height: "100%", width: "100%", position: "relative" }}>
       <style>{`
         @keyframes slideIn { from { opacity: 0; transform: translateX(8px); } to { opacity: 1; transform: translateX(0); } }
-        @keyframes slideInMobile { from { transform: translateX(100%); } to { transform: translateX(0); } }
         @keyframes fadeBg { from { opacity: 0; } to { opacity: 1; } }
       `}</style>
 
@@ -140,20 +140,22 @@ export function TraceView({ tree }: { tree: TraceTree }) {
             </code>
           </div>
         )}
-        <ReactFlow
-          nodes={nodes}
-          edges={edges}
-          nodeTypes={nodeTypes}
-          edgeTypes={edgeTypes}
-          fitView
-          onNodeClick={handleNodeClick}
-          onError={handleReactFlowError}
-          proOptions={reactFlowProOptions}
-        >
-          <TraceEdgeOverlay nodes={nodes} edges={edges} />
-          <Background color="var(--border-primary)" gap={20} />
-          <Controls showInteractive={false} style={controlsStyle} />
-        </ReactFlow>
+        <div style={{ height: "100%", paddingTop: tree.failure ? (isMobile ? 70 : 54) : 0, boxSizing: "border-box" }}>
+          <ReactFlow
+            nodes={nodes}
+            edges={edges}
+            nodeTypes={nodeTypes}
+            edgeTypes={edgeTypes}
+            fitView
+            onNodeClick={handleNodeClick}
+            onError={handleReactFlowError}
+            proOptions={reactFlowProOptions}
+          >
+            <TraceEdgeOverlay nodes={nodes} edges={edges} />
+            <Background color="var(--border-primary)" gap={20} />
+            <Controls showInteractive={false} style={controlsStyle} />
+          </ReactFlow>
+        </div>
       </div>
 
       {selected && isMobile && (
@@ -180,12 +182,13 @@ export function TraceView({ tree }: { tree: TraceTree }) {
             fontSize: 13,
             display: "flex",
             flexDirection: "column",
+            boxSizing: "border-box",
             position: isMobile ? "fixed" : "relative",
             top: isMobile ? 0 : undefined,
             right: isMobile ? 0 : undefined,
             bottom: isMobile ? 0 : undefined,
             zIndex: isMobile ? 31 : undefined,
-            animation: isMobile ? "slideInMobile 0.25s ease" : "slideIn 0.2s ease",
+            animation: isMobile ? undefined : "slideIn 0.2s ease",
             boxShadow: isMobile ? "-4px 0 16px rgba(0,0,0,0.15)" : undefined,
           }}
         >

@@ -99,6 +99,12 @@ describe("Home page", () => {
     expect(homeLink).toHaveAttribute("href", "/");
   });
 
+  it("renders a wrapping responsive header", () => {
+    render(<Home />);
+    const header = screen.getByTestId("app-header");
+    expect(header).toHaveStyle({ flexWrap: "wrap" });
+  });
+
   it("renders sample buttons", async () => {
     render(<Home />);
     // Samples load async — wait for them
@@ -164,6 +170,7 @@ describe("Home page", () => {
 
     const picker = await screen.findByLabelText("Recent live traces");
     expect(picker).toBeTruthy();
+    expect(picker).toHaveStyle({ maxWidth: "100%" });
     expect(screen.getByRole("option", { name: /0xaaaa…aaaa/ })).toBeTruthy();
     expect(screen.getByRole("option", { name: /to 0xaaaa…aaaa/ })).toBeTruthy();
   });

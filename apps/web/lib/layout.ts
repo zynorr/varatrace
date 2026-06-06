@@ -1,7 +1,7 @@
 import dagre from "dagre";
 import type { Edge, Node } from "reactflow";
 import { MarkerType } from "reactflow";
-import type { TraceTree } from "./types";
+import type { MessageNode, TraceTree } from "./types";
 
 export const TRACE_NODE_WIDTH = 240;
 export const TRACE_NODE_HEIGHT = 56;
@@ -11,7 +11,10 @@ export const TRACE_NODE_HEIGHT = 56;
  * top-down layout. Failure-path elements and inferred edges are styled
  * distinctly. Custom node rendering lives in components/TraceNodeCard.
  */
-export function traceToFlow(tree: TraceTree): { nodes: Node[]; edges: Edge[] } {
+export function traceToFlow(
+  tree: TraceTree,
+  options: { onSelect?: (node: MessageNode) => void } = {},
+): { nodes: Node[]; edges: Edge[] } {
   const g = new dagre.graphlib.Graph();
   g.setDefaultEdgeLabel(() => ({}));
   g.setGraph({ rankdir: "TB", nodesep: 50, ranksep: 80 });
@@ -32,7 +35,7 @@ export function traceToFlow(tree: TraceTree): { nodes: Node[]; edges: Edge[] } {
       position: { x: x - TRACE_NODE_WIDTH / 2, y: y - TRACE_NODE_HEIGHT / 2 },
       width: TRACE_NODE_WIDTH,
       height: TRACE_NODE_HEIGHT,
-      data: { node: n, onFailPath: failPath.has(n.id) },
+      data: { node: n, onFailPath: failPath.has(n.id), onSelect: options.onSelect },
     };
   });
 
