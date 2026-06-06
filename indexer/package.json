@@ -1,0 +1,27 @@
+{
+  "name": "@varatrace/indexer",
+  "version": "0.1.0",
+  "description": "Minimal chain indexer for VaraTrace — subscribes to Gear events and writes normalized data to Postgres",
+  "license": "GPL-3.0",
+  "type": "module",
+  "scripts": {
+    "start": "tsx src/index.ts",
+    "backfill:range": "tsx src/backfill-range.ts",
+    "dev": "tsx watch src/index.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@gear-js/api": "^0.45.0",
+    "@polkadot/api": "^16.5.6",
+    "dotenv": "^16.4.7",
+    "pg": "^8.13.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "@types/pg": "^8.20.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.9"
+  }
+}

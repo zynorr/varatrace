@@ -1,0 +1,13 @@
+.env
+.env.*
+.git
+.next
+.vercel
+**/.vercel
+node_modules
+**/node_modules
+pgdata
+
+apps/web
+indexer
+docker-compose.yml

@@ -1,0 +1,18 @@
+app = "varatrace-indexer"
+primary_region = "iad"
+
+[build]
+  dockerfile = "indexer/Dockerfile"
+  context = ".."
+
+[env]
+  VARA_WSS = "wss://testnet.vara.network"
+  FETCH_METADATA = "true"
+
+[[vm]]
+  memory = "1gb"
+  cpu_kind = "shared"
+  cpus = 1
+
+[processes]
+  app = "npm start"

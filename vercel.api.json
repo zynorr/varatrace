@@ -1,0 +1,22 @@
+{
+  "version": 2,
+  "env": {
+    "npm_config_fetch_retries": "5",
+    "npm_config_fetch_retry_mintimeout": "20000",
+    "npm_config_fetch_retry_maxtimeout": "120000"
+  },
+  "installCommand": "npm ci",
+  "buildCommand": "npm run api:typecheck",
+  "builds": [
+    {
+      "src": "api/index.ts",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/api/index.ts"
+    }
+  ]
+}

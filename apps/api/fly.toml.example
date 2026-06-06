@@ -1,0 +1,22 @@
+app = "varatrace-api"
+primary_region = "iad"
+
+[build]
+  dockerfile = "apps/api/Dockerfile"
+  context = "../.."
+
+[env]
+  PORT = "3001"
+  VARA_WSS = "wss://testnet.vara.network"
+
+[http_service]
+  internal_port = 3001
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
+
+[[vm]]
+  memory = "1gb"
+  cpu_kind = "shared"
+  cpus = 1

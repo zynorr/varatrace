@@ -1,0 +1,78 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: varatrace
+      POSTGRES_USER: varatrace
+      POSTGRES_PASSWORD: varatrace
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/001-init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U varatrace -d varatrace"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  adminer:
+    image: adminer
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    image: varatrace-api:local
+    profiles: ["app"]
+    working_dir: /workspace/apps/api
+    environment:
+      PORT: "3001"
+      DATABASE_URL: postgresql://varatrace:varatrace@postgres:5432/varatrace
+      VARA_WSS: ${VARA_WSS:-wss://testnet.vara.network}
+    ports:
+      - "3001:3001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: npm start
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    image: varatrace-web:local
+    profiles: ["app"]
+    working_dir: /workspace/apps/web
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:3001
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+    command: npm run dev -- -H 0.0.0.0
+
+  indexer:
+    build:
+      context: .
+      dockerfile: indexer/Dockerfile
+    image: varatrace-indexer:local
+    profiles: ["live"]
+    working_dir: /workspace/indexer
+    environment:
+      DATABASE_URL: postgresql://varatrace:varatrace@postgres:5432/varatrace
+      VARA_WSS: ${VARA_WSS:-wss://testnet.vara.network}
+      FROM_BLOCK: ${FROM_BLOCK:-}
+      TO_BLOCK: ${TO_BLOCK:-}
+      FETCH_METADATA: ${FETCH_METADATA:-false}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: npm start
+
+volumes:
+  pgdata:

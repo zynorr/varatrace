@@ -1,0 +1,19 @@
+node_modules/
+.vercel/
+.next/
+dist/
+*.log
+*.tsbuildinfo
+.env
+.env.local
+.env.*.local
+.DS_Store
+.codex-artifacts/
+varatrace-live-trace-*.png
+
+# The indexer's .env (not .env.example) is user-specific
+indexer/.env
+
+# Postgres data from docker compose
+pgdata/
+.vercel

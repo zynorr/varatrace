@@ -1,0 +1,32 @@
+{
+  "name": "@varatrace/api",
+  "version": "0.1.0",
+  "description": "VaraTrace trace API (Fastify) — serves reconstructed message trees",
+  "license": "GPL-3.0",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "start": "tsx src/server.ts",
+    "audit:live": "tsx src/audit-live-traces.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@fastify/cors": "^10.0.1",
+    "@gear-js/api": "^0.45.0",
+    "@polkadot/api": "^16.5.6",
+    "@vercel/node": "^5.8.12",
+    "dotenv": "^16.4.7",
+    "fastify": "^5.1.0",
+    "pg": "^8.13.1",
+    "sails-js": "^1.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "@types/pg": "^8.11.10",
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.9"
+  }
+}

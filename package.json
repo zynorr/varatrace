@@ -1,0 +1,15 @@
+{
+  "name": "varatrace",
+  "version": "0.1.0",
+  "private": true,
+  "license": "GPL-3.0",
+  "type": "module",
+  "workspaces": [
+    "apps/api",
+    "packages/core"
+  ],
+  "scripts": {
+    "api:test": "npm test --workspace @varatrace/api",
+    "api:typecheck": "npm run typecheck --workspace @varatrace/api"
+  }
+}
