@@ -79,12 +79,24 @@ export default function Home() {
         boxShadow: "var(--header-shadow)",
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--color-indigo)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M12 2L2 7l10 5 10-5-10-5z" />
-            <path d="M2 17l10 5 10-5" />
-            <path d="M2 12l10 5 10-5" />
-          </svg>
-          <strong style={{ fontSize: 17, letterSpacing: "-0.3px", color: "var(--text-primary)" }}>VaraTrace</strong>
+          <a
+            href="/"
+            aria-label="VaraTrace home"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 10,
+              color: "inherit",
+              textDecoration: "none",
+            }}
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--color-indigo)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M12 2L2 7l10 5 10-5-10-5z" />
+              <path d="M2 17l10 5 10-5" />
+              <path d="M2 12l10 5 10-5" />
+            </svg>
+            <strong style={{ fontSize: 17, letterSpacing: 0, color: "var(--text-primary)" }}>VaraTrace</strong>
+          </a>
           <span style={{ color: "var(--text-muted)", fontSize: 13 }}>— async message debugger for Vara</span>
           {status && <DataSourceBadge status={status} />}
         </div>

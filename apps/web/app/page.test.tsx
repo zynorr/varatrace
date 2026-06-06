@@ -93,6 +93,12 @@ describe("Home page", () => {
     expect(screen.getByText("VaraTrace")).toBeTruthy();
   });
 
+  it("links the VaraTrace brand to the home page", () => {
+    render(<Home />);
+    const homeLink = screen.getByRole("link", { name: "VaraTrace home" });
+    expect(homeLink).toHaveAttribute("href", "/");
+  });
+
   it("renders sample buttons", async () => {
     render(<Home />);
     // Samples load async — wait for them
