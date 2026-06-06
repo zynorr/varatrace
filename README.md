@@ -35,10 +35,10 @@ Working today:
 - Hosted Vercel deployment for the public web UI and Neon-backed API
 - Managed Neon Postgres connected to the hosted API, seeded with recent real
   testnet traces
+- Always-on Railway indexer service connected to the same Neon database
 
 Still being validated for MVP polish:
 
-- Always-on hosted indexer for continuous public live traces
 - Archive endpoint or near-head indexing strategy for pruned Vara testnet
   history
 - Production hardening for hosted API, web, indexer, and managed Postgres
@@ -340,6 +340,8 @@ Current public deployment:
 - API: https://varatrace-api.vercel.app
 - Data: Neon Postgres connected to `varatrace-api`, seeded with recent
   testnet traces
+- Indexer: Railway project `varatrace-indexer`, service `indexer`, running
+  `indexer/Dockerfile`
 - Live trace sample:
   `0x2833a42b4982a9480861f9151cee3e3a3747141d9ba3258c15ab6ec494eddc9d`
 
@@ -348,6 +350,13 @@ For continuous live indexed data, run the indexer and API against the same
 state, so historical backfills should stay near the current finalized head or
 use archive access. Example Fly.io config templates are included at
 `apps/api/fly.toml.example` and `indexer/fly.toml.example`.
+
+Railway indexer service variables:
+
+- `DATABASE_URL`: same Neon pooled URL used by the hosted API
+- `RAILWAY_DOCKERFILE_PATH`: `indexer/Dockerfile`
+- `VARA_WSS`: `wss://testnet.vara.network`
+- `FETCH_METADATA`: `false` by default; set `true` to cache program metadata
 
 ## Environment
 
@@ -379,10 +388,12 @@ Done:
 - Production Vercel deployment for web UI and Neon-backed API
 - Managed Neon Postgres provisioned and API connected
 - Recent real testnet traces seeded into hosted DB
+- Always-on Railway indexer deployed for continuous public live traces
 
 In progress:
 
-- Always-on hosted indexer for continuous public live traces
+- Archive access or a near-head backfill workflow for older pruned testnet
+  history
 
 ## License
 
